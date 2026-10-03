@@ -1,6 +1,6 @@
 # Digital Signal Processing
 
-Solutions in Python to the programming labs developed by the **Computer Vision, Speech Communication & Signal Processing Group** of the **School of Electrical and Computer Engineering, National Technical University of Athens (NTUA)**, as part of the *Digital Signal Processing* course during the **Spring Semester 2021–2022**.
+Solutions in Python to the programming labs developed by the **Computer Vision, Speech Communication & Signal Processing Group** of the **School of Electrical and Computer Engineering, National Technical University of Athens (NTUA)**, as part of the *Digital Signal Processing* course during the **Spring 2021–2022**.
 
 ## Course Information
 
@@ -13,3 +13,8 @@ Solutions in Python to the programming labs developed by the **Computer Vision, 
 | **Semester** | Spring 2021–2022 |
 | **Programming Language** | Python |
 | **Number of Labs** | 2 |
+
+## Labs
+
+- [Lab 1](./lab1)
+- [Lab 2](./lab2)
