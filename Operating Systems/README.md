@@ -1,4 +1,4 @@
-# Digital Signal Processing
+# Operating Systems 
 
 Solutions in C to the programming labs developed by the **Computing Systems Laboratory** of the **School of Electrical and Computer Engineering, National Technical University of Athens (NTUA)**, as part of the *Operating Systems* course during the **Spring 2021–2022**.
 
