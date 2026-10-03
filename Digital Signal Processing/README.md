@@ -12,4 +12,4 @@ Solutions in Python to the programming labs developed by the **Computer Vision, 
 | **Course Group** | [Computer Vision, Speech Communication & Signal Processing Group](https://cvsp.cs.ntua.gr/) |
 | **Semester** | Spring 2021–2022 |
 | **Programming Language** | Python |
-
+| **Number of Labs** | 2 |
