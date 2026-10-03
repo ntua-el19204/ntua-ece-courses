@@ -1,0 +1,47 @@
+Τα System Calls που χρησιμοποιεί η strace είναι :
+
+1) int execve(const char *filename, char *const argv[],char *const envp[]);
+	execve(...) executes the program pointed to by filename (executable). 
+	argv is an array of argument strings passed to the new program.
+	envp is an array of strings, conventionally of the form key=value, which are passed as environment to the new program.
+
+2) int access(const char *pathname, int mode);
+	access() checks whether the calling process can access the file pathname.
+	The mode specifies the accessibility check(s) to be performed, and is either the value F_OK, 
+	or a mask consisting of the bitwise OR of one or more of R_OK, W_OK, and X_OK.
+		F_OK tests for the existence of the file.
+		R_OK, W_OK, and X_OK test whether the file exists and grants read, write, and execute permissions, respectively.
+
+3) void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
+	mmap() creates a new mapping in the virtual address space of the
+      calling process.  The starting address for the new mapping is
+      specified in addr.  The length argument specifies the length of
+      the mapping (which must be greater than 0).
+
+4) int open(const char *pathname, int flags);
+	The open() system call opens the file specified by pathname.  If
+      the specified file does not exist, it may optionally (if O_CREAT
+      is specified in flags) be created by open().
+
+5) int close(int fd); 
+	close() closes a file descriptor, so that it no longer refers to
+      any file and may be reused.  Any record locks (see fcntl(2)) held
+      on the file it was associated with, and owned by the process, are
+      removed (regardless of the file descriptor that was used to
+      obtain the lock).
+
+6) ssize_t read(int fd, void *buf, size_t count);
+	read() attempts to read up to count bytes from file descriptor fd
+      into the buffer starting at buf.
+
+7) int fstat(int fd, struct stat *buf);
+	fstat() returns information about a file (like size or time of last access).
+
+8) int mprotect(void *addr, size_t len, int prot);
+	 mprotect() changes the access protections for the calling
+       process's memory pages containing any part of the address range
+       in the interval [addr, addr+len-1]. addr must be aligned to a
+       page boundary.
+       If the calling process tries to access memory in a manner that
+       violates the protections, then the kernel generates a SIGSEGV
+       signal for the process.
