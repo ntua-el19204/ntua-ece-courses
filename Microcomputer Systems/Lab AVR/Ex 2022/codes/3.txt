@@ -1,0 +1,49 @@
+#include <avr/io.h>
+
+char x;
+
+int main(void)
+{
+	
+	DDRB=0xFF; // Αρχικοποίηση PORTB ως output
+	DDRA=0x00; // Αρχικοποίηση PORTA ως input
+	
+	x = 1;
+	PORTB = x;
+	
+    while (1) 
+    {	
+		
+		if ((PINA & 0x01) == 1){			// Έλεγχος πατήματος push-button SW0
+			
+			while ((PINA & 0x01) == 1);		// Έλεγχος επαναφοράς pushbutton SW0
+			if (x == 128)	x = 1;			// Έλεγχος υπερχείλισης
+			else x = x << 1;				// Αριστερή ολίσθηση κατά 1						
+		}
+		
+		else if ((PINA & 0x02) == 2){			// Έλεγχος πατήματος push-button SW1
+			
+			while ((PINA & 0x02) == 2);		// Έλεγχος επαναφοράς pushbutton SW1
+			if (x == 1)	x = 128;			// Έλεγχος υπερχείλισης
+			else x = x >> 1;				// Δεξιά ολίσθηση κατά 1
+		}
+		
+		else if ((PINA & 0x04) == 4){			// Έλεγχος πατήματος push-button SW2
+			
+			while ((PINA & 0x04) == 4);		// Έλεγχος επαναφοράς pushbutton SW2
+			if (x == 128)	x = 2;		// Έλεγχος υπερχείλισης
+			else if (x == 64) x = 1;		// Έλεγχος υπερχείλισης
+			else x = x << 2;				// Αριστερή ολίσθηση κατά 2
+		}
+		
+		else if ((PINA & 0x08) == 8){			// Έλεγχος πατήματος push-button SW3
+			
+			while ((PINA & 0x08) == 8);		// Έλεγχος επαναφοράς pushbutton SW3
+			x = 128;
+		}
+		
+		PORTB = x;
+		
+    }
+}
+

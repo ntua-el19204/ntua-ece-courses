@@ -1,0 +1,85 @@
+.include "m16def.inc"
+.def A = r16
+.def B = r17
+.def C = r18
+.def D = r19
+.def rout = r20
+
+reset: 
+	ldi r24, low(RAMEND)	; initialize stack pointer
+	out SPL, r24
+	ldi r24, high(RAMEND)
+	out SPH, r24
+	
+	ser r24			; initialize PORTA for output
+	out DDRA, r24			
+	clr r24			; initialize PORTB for input
+	out DDRB, r24
+
+main:
+	in A, PINB
+	andi A, 1			; isolation of 1st bit
+	
+	in B, PINB
+	andi B, 2			; isolation of 2nd bit
+	lsr B				; bring bit to lsb
+	
+	in C, PINB
+	andi C, 4			; isolation of 3rd bit
+	lsr C
+	lsr C
+	
+	in D, PINB
+	andi D, 8			; isolation of 4th bit
+	lsr D
+	lsr D
+	lsr D
+
+F0:
+	cpse B, C			; if B != C then F0 = 0 and next line will not be skiped
+	rjmp F0_0			; jump to F0_0 since F0 = 0
+	sbrc B, 0			; if B = C = 0 we only care about B'C'D
+					; since ABC = 0
+	rjmp ABC
+
+BCD:
+	sbrc D, 0			; if D = 0, skip next line
+	rjmp F0_0			; if D = 1, F0 = 0
+	rjmp F0_1			; if D = 0, F0 = 1
+
+ABC:
+	sbrc A, 0			; if A = 0, skip next line
+	rjmp F0_1			; if A = 1, F0 = 1
+	rjmp F0_0			; if A = 0, F0 = 0
+
+F0_0:
+	ldi rout, 0
+	rjmp F1
+
+F0_1:
+	ldi rout, 1
+
+
+F1:
+	sbrs D, 0			; if D = 1, skip next line
+	rjmp F1_0
+
+	sbrc A, 0			; if A = 0, do not jump to F1_1
+	rjmp F1_1
+
+	sbrc B, 0			; if B = 0, do not jump to F1_1
+	rjmp F1_1
+
+	sbrc C, 0			; if A = 0, do not jump to F1_1
+	rjmp F1_1
+
+F1_0:
+	out PORTA, rout		; since F1 = 0, no need to change anything
+	rjmp END
+
+F1_1:
+	ori rout, 2			; rout <-- rout + 2
+	out PORTA, rout
+
+END:
+	nop

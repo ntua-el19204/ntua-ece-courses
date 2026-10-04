@@ -1,0 +1,76 @@
+; We will keep the 45-sec counter in the D-E register pair
+; D corresponds to decimals and E to units
+
+
+START:
+	IN 10H			; no protection memory
+	LXI B,FFFFH		; for DELB
+	
+CLEAN_DISPLAY:
+	MVI A,10H		; 10H -> blank in 7-segment display
+	STA 08B0H		; 1st digit of 7-segment display
+	STA 00B1H		; 2nd digit of 7-segment display
+	STA 08B2H		; 3rd digit of 7-segment display
+	STA 08B3H		; 4th digit of 7-segment display
+	STA 08B4H		; 5th digit of 7-segment display
+	STA 08B5H		; 6th digit of 7-segment display
+	LXI D,08B0H		; for STDM
+	CALL STDM
+	CALL DCD
+
+ENABLE_INTERRUPTS:
+	MVI A,0DH			; initialize interrupt mask 
+	SIM				; RST_6.5
+	EI 				; and enable it
+
+WAIT_FOR_INTR:			; wait until an interruption occurs
+	JMP WAIT_FOR_INTR	
+	
+INTR_ROUTINE:				; 8085 default name
+	LXI B,0FFFH			; for DELB
+
+	EI				; enable interrupts again 8085 disables them
+					; by default
+	MVI D,04H
+	MVI E,05H			; DE = 45
+	JMP DISPLAY
+
+LEDS_ON:
+	MVI A,00H
+	STA 3000H
+	CALL DELB	
+	MVI A,FFH
+	STA 3000H
+	CALL DELB
+	
+
+DISPLAY:
+	MOV A,D
+	STA 08B5H			; 6th digit has the decimal
+	MOV A,E
+	STA 08B4H			; 5th digit has the unit
+	PUSH D				; save D because is needed 
+	LXI D,08B0H
+	CALL STDM			; for the 7-segment display
+	CALL DCD
+	POP D				; take D back
+	MOV A,E
+	
+CHECK:
+	CPI 00H			; if unit is not zero then 
+	JNZ NEXT_SECOND2		; count next second
+	MOV A,D			; if unit is zero then we
+	CPI 00H			; must check the decimal
+	JZ WAIT_FOR_INTR		; if decimale is zero then 
+					; the counting has finished
+NEXT_SECOND1:					
+	MVI E,09H			; else, make unit 9 and  
+	DCR D				; decrease the decimal
+	JMP LEDS_ON		
+	
+NEXT_SECOND2:
+	DCR E				; E <- E-1 for next second
+	JMP LEDS_ON			; if E is not 0, count next second
+
+END
+

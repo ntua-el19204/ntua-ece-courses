@@ -1,0 +1,35 @@
+START:
+	MVI A,0DH	; initialize interrupt mask 
+	SIM		; RST_6.5
+	EI 		; and enable it
+WAIT:
+	JMP WAIT
+
+INTR_ROUTINE:
+	EI
+	MVI A,00H
+	STA 3000H
+	JMP WAIT
+
+IN 10H	
+MVI A,10H  		 ;Set up Display
+	STA 0B00H 
+	STA 0B01H 
+	STA 0B02H 
+	STA 0B03H 
+	STA 0B04H 
+MVI A,11H
+	STA 0B05H	
+
+;LXI D,0B00H
+
+LOOPP:
+	LXI D,0B00H 
+	CALL STDM
+	CALL DCD
+	JMP LOOPP
+
+END
+
+
+END

@@ -1,0 +1,29 @@
+MVI B,01H	; LED
+MVI D,01H	; checks if we go up or down
+CHECK:
+	MOV A,D
+	CPI 01H
+	JNZ DOWN
+	UP:
+		MVI D,01H
+		MOV A,B
+		CPI 80H
+		JZ DOWN
+		CMA
+		STA 3000H
+		CMA
+		RLC 
+		MOV B,A
+		JMP CHECK
+	DOWN:
+		MVI D,00H
+		MOV A,B
+		CPI 01H
+		JZ UP
+		CMA
+		STA 3000H
+		CMA
+		RRC 
+		MOV B,A
+		JMP CHECK
+END

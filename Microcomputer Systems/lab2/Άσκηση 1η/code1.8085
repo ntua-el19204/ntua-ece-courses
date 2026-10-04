@@ -1,0 +1,46 @@
+IN 10H
+LXI B,03E8H		; delay for DELB
+MVI A,FFH
+LXI H,0900H
+
+FOR:
+	CPI 00H
+	JZ PUT_ZERO
+	MOV M,A
+	DCR A
+	INX H
+	JMP FOR
+
+
+PUT_ZERO: 		; Put zero in last positon
+	MOV M,A
+
+
+
+MVI A, 00H 		; in case of error
+CHECK:
+	CPI FFH 
+	JZ EXIT
+	CMP M 
+	JNZ ERROR
+	DCX H 
+	DCR A
+	INR A 
+
+	
+
+EXIT:
+	CMP M
+	JNZ ERROR
+	CMA		; if the outcome is correct
+	STA 3000H	; turn on all the leds
+	CALL DELB
+	JUMP END
+
+ERROR:			; if an error occured
+	MVI A,FEH 	
+	STA 3000H	; turn on only the first led
+	CALL DELB
+
+END:
+	END

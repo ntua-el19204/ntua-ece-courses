@@ -1,0 +1,111 @@
+START:
+	IN 10H		; no protection memory
+
+CLEAN_DISPLAY1:
+	MVI A,10H		; 10H -> blank in 7-segment display
+	STA 08B0H		; 1st digit of 7-segment display
+	STA 00B1H		; 2nd digit of 7-segment display
+	STA 08B2H		; 3rd digit of 7-segment display
+	STA 08B3H		; 4th digit of 7-segment display
+	STA 08B4H		; 5th digit of 7-segment display
+	STA 08B5H		; 6th digit of 7-segment display
+	LXI D,08B0H		; for STDM
+	CALL STDM
+	CALL DCD
+
+
+ENABLE_INTERRUPTS:
+	MVI A,0DH			; initialize interrupt mask 
+	SIM				; RST_6.5
+	EI 				; and enable it
+
+WAIT_FOR_INTR:
+	LXI D,08B0H
+	CALL STDM		
+	CALL DCD
+	;EI
+	JMP WAIT_FOR_INTR
+
+INTR_ROUTINE:
+	EI
+
+CLEAN_DISPLAY2:
+	MVI A,FFH		; turn off reverse logic leds
+	STA 3000H
+	MVI A,10H		; 10H -> blank in 7-segment display
+	STA 08B0H		; 1st digit of 7-segment display
+	STA 00B1H		; 2nd digit of 7-segment display
+	STA 08B2H		; 3rd digit of 7-segment display
+	STA 08B3H		; 4th digit of 7-segment display
+	STA 08B4H		; 5th digit of 7-segment display
+	STA 08B5H		; 6th digit of 7-segment display
+	LXI D,08B0H		; for STDM
+	CALL STDM
+	CALL DCD
+
+
+K_INIT:
+	MVI C,0AH		; C = 	10D (K1)
+	MVI D,64H		; D = 100D (K2)			
+	MVI E,C8H		; E = 200D (K3)
+
+
+READ_INPUT:
+	CALL KIND
+
+
+	STA 08B3H		; 4th digit of 7-segment display
+
+	CALL KIND
+	STA 08B2H		; 3rd digit of 7-segment display
+
+TWO_DIGIT_HEX:
+	LDA 08B3H		; most significant hex digit
+	RLC			; shift it left 4 times
+	RLC
+	RLC
+	RLC
+
+	MOV B,A
+	LDA 08B2H		; least significant hex digit
+
+	ADD B			; A is a 2-digit hex number
+	MOV B,A 		; B <- A
+
+
+COMPARISON:	
+THRESHOLD1:
+	CMP C
+	JNC THRESHOLD2	; if A >= C jump to threshold 2
+	MVI A,01H		; else the 2-digit hex number belongs
+				; to the first threshold
+	JMP OUTPUT
+
+THRESHOLD2:
+	CMP D		
+	JNC THRESHOLD3	; if A >= D jump to threshold 3
+	MVI A,02H		; else the 2-digit hex number belongs
+				; to the second threshold
+	JMP OUTPUT
+	
+THRESHOLD3:
+	CMP E		
+	JNC THRESHOLD4	; if A >= E jump to threshold 4
+	MVI A,04H		; else the 2-digit hex number belongs
+				; to the third threshold
+	JMP OUTPUT
+
+THRESHOLD4:
+	MVI A,08H
+
+OUTPUT:
+	CMA 			; reverse logic leds
+	STA 3000H		; led on
+	LXI D,08B0H
+	CALL STDM		
+	CALL DCD		; 7-segment display
+	;EI			; enable interrupts again
+	JMP WAIT_FOR_INTR	; wait for the next interrupt
+
+END
+	

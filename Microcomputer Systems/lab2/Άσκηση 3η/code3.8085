@@ -1,0 +1,146 @@
+START:	
+	IN 10H		; for memory protection
+	LXI H,0A00H	
+	MVI B,04H	
+L1:	
+	MVI M,10H	
+	INX H
+	DCR B
+	JNZ L1
+LINE0:	
+	MVI A,FEH	; line select
+	STA 2800H	
+	LDA 1800H	; read columns 
+	ANI 07H	; keep 3 LSBs	
+	MVI C,86H	; 
+	CPI 06H	; check if 1st column is selected
+			; 1ης στήλης [INSTR_STEP])
+	JZ SHOW	; show to 7-segment display
+			 
+	MVI C,85H	
+	CPI 05H	
+			
+	JZ SHOW	 	
+			; ignore HDWR_STEP
+LINE1:	
+	MVI A,FDH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,84H	
+	CPI 06H		
+	JZ SHOW	
+	MVI C,80H	
+	CPI 05H	
+	JZ SHOW	 
+	MVI C,82H	 
+	CPI 03H	
+	JZ SHOW
+LINE2:	
+	MVI A,FBH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,00H	
+	CPI 06H	
+	JZ SHOW	
+	MVI C,83H	
+	CPI 05H	; STORE/INCR
+	JZ SHOW	 
+	MVI C,81H	 
+	CPI 03H	; DECR
+	JZ SHOW
+LINE3:	
+	MVI A,F7H
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,01H	
+	CPI 06H	
+	JZ SHOW	
+	MVI C,02H	
+	CPI 05H	
+	JZ SHOW	 
+	MVI C,03H	
+	CPI 03H	
+	JZ SHOW
+LINE4:	
+	MVI A,EFH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,04H
+	CPI 06H	
+	JZ SHOW
+	MVI C,05H
+	CPI 05H	
+	JZ SHOW
+	MVI C,06H
+	CPI 03H	
+	JZ SHOW
+LINE5:	
+	MVI A,DFH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,07H
+	CPI 06H	
+	JZ SHOW
+	MVI C,08H
+	CPI 05H	
+	JZ SHOW
+	MVI C,09H
+	CPI 03H	
+	JZ SHOW
+LINE6:	
+	MVI A,BFH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,0AH
+	CPI 06H	
+	JZ SHOW
+	MVI C,0BH
+	CPI 05H	
+	JZ SHOW
+	MVI C,0CH
+	CPI 03H	
+	JZ SHOW
+LINE7:	
+	MVI A,7FH
+	STA 2800H	
+	LDA 1800H	 
+	ANI 07H		
+	MVI C,0DH
+	CPI 06H	
+	JZ SHOW
+	MVI C,0EH
+	CPI 05H
+	JZ SHOW
+	MVI C,0FH
+	CPI 03H	
+	JZ SHOW
+	JMP START		; repeat checks if the button has not been pressed
+SHOW:	
+	LXI H,0A04H		; memory position
+	MOV A,C		; 
+	ANI 0FH		; keep 4 LSBs 
+	MOV M,A		; put the lsbs in 0A04H memory position
+				; which is the 5th bit of7-segment display
+	INX H			; next mem position
+	MOV A,C		
+	ANI F0H		; keep 4 MSBs
+	RLC
+	RLC			; make them LSBs
+	RLC
+	RLC	
+	MOV M,A		; store them in 6th bit of
+				; 7-segment display
+	LXI D,0A00H		
+				
+	CALL STDM	
+	CALL DCD		
+	JMP START		
+
+END
+
