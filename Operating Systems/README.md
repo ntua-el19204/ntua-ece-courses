@@ -20,3 +20,7 @@ Solutions in C to the programming labs developed by the **Computing Systems Labo
 - [Lab 2](./lab2)
 - [Lab 3](./lab3)
 - [Lab 4](./lab4)
+
+## Team
+- Gregory Delatolas
+- George Kyriakos
