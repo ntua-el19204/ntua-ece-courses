@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
-#include "tree.h"
-#include "proc-common.h"
+#include "../helpers/tree.h"
+#include "../helpers/proc-common.h"
 
 #define READ_END 0
 #define WRITE_END 1

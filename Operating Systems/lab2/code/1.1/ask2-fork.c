@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#include "proc-common.h"
+#include "../helpers/proc-common.h"
 
 #define SLEEP_PROC_SEC  10
 #define SLEEP_TREE_SEC  3
