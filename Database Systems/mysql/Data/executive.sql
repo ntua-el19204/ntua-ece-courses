@@ -1,0 +1,22 @@
+USE ELIDEK;
+
+insert into executive (executive_name) values ('Nikola');
+insert into executive (executive_name) values ('Tate');
+insert into executive (executive_name) values ('Johannah');
+insert into executive (executive_name) values ('Brice');
+insert into executive (executive_name) values ('Rod');
+insert into executive (executive_name) values ('Rawley');
+insert into executive (executive_name) values ('Candy');
+insert into executive (executive_name) values ('Tracy');
+insert into executive (executive_name) values ('Nikolas');
+insert into executive (executive_name) values ('Oliy');
+insert into executive (executive_name) values ('Jules');
+insert into executive (executive_name) values ('Jeniffer');
+insert into executive (executive_name) values ('Ilka');
+insert into executive (executive_name) values ('Jacqueline');
+insert into executive (executive_name) values ('Maurine');
+insert into executive (executive_name) values ('Faythe');
+insert into executive (executive_name) values ('Rhonda');
+insert into executive (executive_name) values ('Ambros');
+insert into executive (executive_name) values ('Shayne');
+insert into executive (executive_name) values ('Hanny');

@@ -1,0 +1,22 @@
+USE Elidek;
+
+insert into Executive (executive_name) values ('Egor MacLeese');
+insert into Executive (executive_name) values ('Desmund Glazebrook');
+insert into Executive (executive_name) values ('Steffen Sandey');
+insert into Executive (executive_name) values ('Jecho Banbury');
+insert into Executive (executive_name) values ('Emlynn McGrail');
+insert into Executive (executive_name) values ('Brunhilde De Nisco');
+insert into Executive (executive_name) values ('Sven Leyburn');
+insert into Executive (executive_name) values ('Frederic Shelper');
+insert into Executive (executive_name) values ('Wendeline Jehaes');
+insert into Executive (executive_name) values ('Carlee Maber');
+insert into Executive (executive_name) values ('Helyn Whodcoat');
+insert into Executive (executive_name) values ('Babita Querrard');
+insert into Executive (executive_name) values ('Oliver Matley');
+insert into Executive (executive_name) values ('Gian Handling');
+insert into Executive (executive_name) values ('Juliana Barizeret');
+insert into Executive (executive_name) values ('Cristal Masseo');
+insert into Executive (executive_name) values ('Gregory Delatolas');
+insert into Executive (executive_name) values ('Tereza Ann Vassiliou');
+insert into Executive (executive_name) values ('Jorge Kyriakos');
+insert into Executive (executive_name) values ('Luis Suarez');
