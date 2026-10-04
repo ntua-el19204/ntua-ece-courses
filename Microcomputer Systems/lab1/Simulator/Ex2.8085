@@ -1,0 +1,87 @@
+LXI B,01F4H
+MVI L,01H			; LED 
+				; position of one (1) shows which led 
+				; will turn on
+
+MVI D,01H			; checks if we go m_up(1) or m_down(0)
+MVI E,01H			; checks if we go m_up(1) or m_down(0)
+				; same as D
+OPERATION_CHECK: 
+	LDA 2000H		; A0 indicates the operation 
+				; A1 indicates whether to stop or not 
+	RRC
+	RRC
+	JC STOP		; If A1 = 1, stop
+	RLC
+	RLC
+	JNC CYCLE		; If A0 = 0, CYCLE
+	
+	MOUNTAIN:
+		MOV A,D	
+		CPI 01H	
+		JNZ DOWN
+	UP:
+		MVI D,01H
+		MVI E,01H
+		MOV A,L
+		CPI 80H	; If we reach the 8th bit we have to go 
+				; to the 7th -> Down
+		JZ DOWN
+		CMA
+		STA 3000H
+		CALL DELB
+		CMA
+		RLC 		; In order to shift one bit left 
+				; to our previous number
+		MOV L,A
+		JMP OPERATION_CHECK
+	DOWN:
+		MVI D,00H
+		MVI E,00H
+		MOV A,L
+		CPI 01H	; If we reach the 1st bit we have to go 
+				; to the 2nd -> Up
+		JZ UP
+		CMA
+		STA 3000H
+		CALL DELB
+		CMA
+		RRC		; In order to shift one bit right 
+				; to our previous number 
+		MOV L,A
+		JMP OPERATION_CHECK
+	
+	START:			; Start the cycle process		
+		MVI L,01H
+	CYCLE:
+		MVI D,01H  	; If next operation is mountain,
+				; execute mountain_up
+	
+		MOV A,E	; Check whether previous operation was 
+				; mountain_up or mountain_down 
+		CPI 01H
+		JZ CYCLE_UP
+	CYCLE_DOWN:
+		MVI E,01H
+		MOV A,L
+		RLC
+		RLC		; In last mountain_down loop L is shifted
+				; one bit right, so we have to shift it
+				; two bits left
+		MOV L,A
+	CYCLE_UP:
+		MOV A,L
+		CMA
+		STA 3000H
+		CALL DELB
+		CMA
+		CPI 80H	; If we reach the 8th bit -> go to the
+				; first bit
+		JZ START
+		RLC 
+		MOV L,A
+		JMP OPERATION_CHECK
+	STOP:
+		JMP OPERATION_CHECK		
+
+END

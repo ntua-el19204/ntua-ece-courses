@@ -1,0 +1,61 @@
+LXI B,01F4H
+
+START:
+	MVI D,00H		; Counter for 4 times 5-8
+	MVI E,00H		; Counter for 4 times 1-4
+	
+	CALL KIND
+	
+	CPI 00H		; if the input number is 0
+	JZ ERROR		; jump to ERROR
+	
+	CPI 09H
+	JP ERROR		; We will open the 1st bit (LSB LED) if 
+				; the input number is >= 9
+		
+	
+				; When we reach this line we are sure that
+				; the input is not 0 and that it is < 9.
+	CPI 05H	
+	JP 5-8			;if it is >=5 (and <9 , and not 0) 
+				; jump to 5-8
+
+1-4:				; Here we are sure that our input is
+				; 1 <= x <= 4 
+	MVI A,F0H
+	STA 3000H
+	CALL DELB
+	
+	MVI A,FFH
+	STA 3000H
+	CALL DELB
+	
+	MOV A,E
+	CPI 03H
+	JZ START
+	
+	INR E
+	JMP 1-4
+	
+5-8:
+	MVI A,0FH
+	STA 3000H
+	CALL DELB
+	MVI A,FFH
+	STA 3000H
+	CALL DELB
+	
+	MOV A,D
+	CPI 03H
+	JZ START
+	INR D
+	JMP 5-8
+
+
+ERROR:
+	MVI A,FEH
+	STA 3000H
+	JMP START
+
+
+END

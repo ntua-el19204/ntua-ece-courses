@@ -1,0 +1,55 @@
+START:
+	LDA 2000H
+	MOV B,A		; B holds the input
+
+X1:
+	ANI 0CH		; isolation of bits 2,3
+	CPI 00H		; if bits 2,3 are 00 then 
+	JZ ZERO_OUT0		; x0, x1 are both zero
+	
+	MVI C,02H		; else x1 = 1 and lets see about x0
+	
+X0:
+	MOV A,B
+	ANI 03H		; isolation of bits 0,1
+	CPI 00H		; if bits 0,1 are 00
+	JZ X2			; then x0 = 0
+	MVI C,03H		; else x1 = 1 and x0 = 1 from previous check
+	JMP X2
+
+ZERO_OUT0:
+	MVI C,00H		; x0,x1 = 00
+
+MVI D,00H
+
+X2:
+	MOV A,B
+	ANI 30H		; isolation of bits 4,5
+	CPI 30H		; if bits 4,5 are not 11
+	JNZ X3			; then x3 = 0
+	MOV A,C		; else add 4 to A which holds x1x0
+	ADI 04H		; so that x3 = 1 and x1x0 are not affected
+	MVI D,01H		; if x3 = 1 make D = 1 to check whether
+				; x3 and x4 are equal
+				; If x3 = x4 then XOR gives 0, else 1
+	MOV C,A		; store the so far outcome to C
+
+X3:
+	MOV A,B
+	ANI C0H		; isolation of bits 6,7
+	CPI C0H		; check if bits 6,7 are not 11
+	MVI A,00H		; make A = 0 which does not affect flags
+				; A will be compared to D which holds x3 value
+	JNZ A			; if bits 6,7 are not 1,1 then AND gives 0
+	MVI A,01H		
+A: 
+	CMP D			; if A = D then XOR gives 0
+	MOV A,C
+	JZ OUT
+	ADI 08H		; else XOR gives 1
+OUT:	
+	CMA			; reverse logic leds
+	STA 3000H		; print the output
+
+
+END

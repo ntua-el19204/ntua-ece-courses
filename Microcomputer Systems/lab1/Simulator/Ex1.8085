@@ -1,0 +1,16 @@
+MVI B,01H		; 2 bytes	0800
+LDA 2000H		; 3 bytes	0802
+CPI 00H		; 2 bytes	0805
+JZ A3			; 3 bytes	0807	JUMP TO 0813 = CMA
+A1:
+	RAR		; 1 byte	080A 
+	JC A2		; 3 bytes	080B	JUMP TO 0812 = MOV A,B
+	INR B		; 1 byte	080E
+	JNZ A1		; 3 bytes	080F	JUMP TO 0804 = A1
+A2:
+	MOV A,B	; 1 byte	0812
+A3:
+	CMA		; 1 byte	0813
+	STA 3000H	; 3 bytes	0814
+	RST 1		;		0817
+	END

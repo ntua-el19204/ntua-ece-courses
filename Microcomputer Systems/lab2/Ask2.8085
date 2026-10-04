@@ -1,0 +1,70 @@
+START:
+	LDA 2000H
+	RRC
+	JC START		; if 1st is ON loop
+
+STATE1:			; 1st OFF
+	LDA 2000H
+	RRC
+	JNC STATE1
+
+STATE2:			; 2nd is ON
+	LDA 2000H
+	RRC
+	JC STATE2
+	CALL DISPLAY  	; if it goes off go to Display 
+	JMP END 
+
+	
+	
+DISPLAY:
+	PUSH PSW
+	PUSH D
+	PUSH B
+	MVI D,00H		; D is a counter, when it reaches 15 ,
+				; the program ends.
+	MVI E,00H		; E is a flag to know if the time has
+				; restarted (OFF-ON-OFF-ON). 
+	LXI B,01F4H		; BC = 500d
+	
+CHECK1:
+	MVI E,00H		 
+	LDA 2000H		
+	RRC
+	JNC A1			; if the LSB is still off go to A1
+				; if LSB = ON we go to CHECK2 and we
+				; restart the counter (D =0).
+CHECK2:
+	MVI E,01H
+	LDA 2000H
+	RRC	
+	JC A1
+	MVI E,00H		; E = 0 again because we have restarted
+				; our timer by MVI D,00? 
+				; if we didnt make E = 0 again the timer 
+				; will restart again.
+	MVI D,00H		
+A1:	
+	XRA A			; A = 00H
+	STA 3000H
+	CALL DELB
+	CMA 
+	STA 3000H
+	CALL DELB
+	INR D
+	MOV A,D		 
+	CPI 0FH		
+	JZ R_END
+	MOV A,E
+	CPI 00H
+	JZ CHECK1
+	JNZ CHECK2
+
+R_END:	
+	POP B
+	POP D
+	POP PSW
+	RET
+
+END:
+	END

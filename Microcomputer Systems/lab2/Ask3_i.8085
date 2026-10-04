@@ -1,0 +1,31 @@
+START:
+	LDA 2000H
+	MVI E,00H
+	MVI D,00H		; D is RLC counter 
+				; D = the position of the first '1'
+				; starting counting form MSB to LSB
+	
+	CPI 00H		; if the input number = 00H, 	
+	JZ DISPLAY		; jump to DISPLAY
+BIT1:
+	RLC
+	INR D			; CY flag not affected
+	JNC BIT1		; if bit = 0 get the next one
+	MVI A,00H
+LOO:
+	MOV E,A
+	MOV A,D
+	CPI 00H
+	JZ DISPLAY
+	DCR D
+	MOV A,E
+	INR A			; A = A + 1
+	RRC			; and RRC , in order to put (A7) <- (A0).
+	JMP LOO		; We do this D times.
+DISPLAY:
+	MOV A,E
+	CMA
+	STA 3000H
+	JMP START
+
+END
