@@ -15,3 +15,4 @@ Implementation of the Research Funding Database Management System using  HTML, C
 ## Team
 - Gregory Delatolas
 - George Kyriakos
+- Tereza Anna Vasileiou
