@@ -1,6 +1,6 @@
 # Database Systems
 
-Implementation of the Research Funding Database Management System using  HTML, CSS, JS, and MySQL, as part of the *Databases* course during the **Spring 2021-2022*
+Implementation of the Research Funding Database Management System using  HTML, CSS, JS, and MySQL, as part of the *Databases* course during the **Spring 2021-2022**
 
 ## Course Information
 
